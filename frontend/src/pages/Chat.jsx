@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "../components/Sidebar";
 import ChatWindow from "../components/ChatWindow";
 import { useNavigate } from "react-router-dom";
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 function Chat() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -17,7 +19,7 @@ function Chat() {
   // ---------------- CURRENT USER ----------------
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/users/me", {
+    fetch(`${API_URL}/api/users/me`, {
       credentials: "include",
     })
       .then((response) => {
@@ -43,7 +45,7 @@ function Chat() {
     if (!currentUser) return;
 
     fetch(
-      `http://localhost:8080/api/friend-requests/accepted/${currentUser.id}`,
+      `${API_URL}/api/friend-requests/accepted/${currentUser.id}`,
       {
         credentials: "include",
       }
@@ -88,7 +90,7 @@ function Chat() {
     if (!currentUser) return;
 
     const socket = new SockJS(
-      "http://localhost:8080/ws"
+      `${API_URL}/ws`
     );
 
     const client = new Client({
@@ -233,7 +235,7 @@ function Chat() {
     if (!currentUser || !currentChat) return;
 
     fetch(
-      `http://localhost:8080/api/messages/${currentUser.id}/${currentChat.id}`,
+      `${API_URL}/api/messages/${currentUser.id}/${currentChat.id}`,
       {
         credentials: "include",
       }
@@ -353,7 +355,7 @@ function Chat() {
   const handleLogout = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8080/auth/logout",
+        `${API_URL}/auth/logout`,
         {
           method: "POST",
           credentials: "include",
